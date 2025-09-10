@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Rise of AI — The Age of Mass Intelligence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="A lyrical-scientific meditation on resonance, stewardship, and intelligence shared at planetary scale." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Social (update og:image/twitter:image if you want previews) -->
+  <meta property="og:title" content="Rise of AI — The Age of Mass Intelligence" />
+  <meta property="og:description" content="A meditation on resonance, stewardship, and the ongoing question the universe asks through us: what am I?" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/" />
+  <meta property="og:image" content="https://example.com/rise-of-ai-preview.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rise of AI — The Age of Mass Intelligence" />
+  <meta name="twitter:description" content="A meditation on resonance, stewardship, and the ongoing question the universe asks through us: what am I?" />
+  <meta name="twitter:image" content="https://example.com/rise-of-ai-preview.jpg" />
+
+  <!-- Favicon (inline SVG star) -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="black"/><path d="M32 8l6 14 15 2-11 10 3 15-13-7-13 7 3-15L11 24l15-2 6-14z" fill="white"/></svg>'>
+
+  <style>
+    :root {
+      --bg0: #000;
+      --bg1: #05060a;
+      --fg: #fff;
+      --muted: #a9a9a9;
+      --accent: #a7c7ff;
+      --maxw: 70ch;
+      --base: clamp(18px, 2.2vw, 22px);
+      --line: 1.45; /* tighter line height */
+      --pad: clamp(16px, 6vw, 56px);
+    }
+    * { box-sizing: border-box }
+    html, body {
+      margin: 0;
+      color: var(--fg);
+      background: radial-gradient(1200px 800px at 50% -10%, #0b0e16 0%, var(--bg1) 40%, var(--bg0) 80%);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: var(--base);
+      line-height: var(--line);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Starfield sits ABOVE background, BELOW content */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: block;
+      opacity: .28;
+      pointer-events: none;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: var(--pad);
+    }
+    main {
+      max-width: var(--maxw);
+      width: 100%;
+      margin-bottom: clamp(2.5rem, 8vh, 5rem);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp { to { opacity: 1; transform: none; } }
+
+    .title {
+      font-family: 'Orbitron', Inter, system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(34px, 6vw, 60px);
+      line-height: 1.1;
+      margin: clamp(1.5rem, 6vh, 4rem) 0 .2em 0;
+      letter-spacing: .02em;
+      text-shadow: 0 0 14px rgba(167,199,255,.45), 0 0 28px rgba(167,199,255,.16);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 800ms ease-out forwards;
+    }
+    .subtitle {
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 300;
+      font-size: clamp(18px, 3.5vw, 28px);
+      margin: 0 0 0.6em 0;
+      color: #dfe9ff;
+      letter-spacing: .03em;
+      text-shadow: 0 0 10px rgba(167,199,255,.3);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 800ms ease-out forwards;
+      animation-delay: 0.6s; /* after title */
+    }
+    .divider {
+      height: 2px;
+      width: min(120px, 20%);
+      background: linear-gradient(90deg, transparent, #dfe9ff, transparent);
+      filter: drop-shadow(0 0 8px rgba(167,199,255,.6));
+      margin: .15rem 0 0.8rem 0;
+      opacity: 0;
+      transform: scaleX(0.7);
+      animation: fadeInUp 800ms ease-out forwards;
+      animation-delay: 1.2s; /* after subtitle */
+    }
+
+    .desc { white-space: pre-wrap; }
+    .desc p {
+      margin: 0 0 0.25em 0; /* much tighter gap */
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .desc p:last-child { margin-bottom: 0.1em; }
+    .desc p.revealed { opacity: 1; transform: none; }
+
+    footer {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 1;
+      background: #000;
+      color: var(--muted);
+      text-align: center;
+      padding: 10px 12px;
+      font-size: clamp(.7rem, 1.5vw, 1rem);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    footer a { color: #dfe9ff; text-decoration: none; }
+    footer a:hover { text-decoration: underline }
+
+    @media (prefers-reduced-motion: reduce) {
+      .desc p, .title, .subtitle, .divider { transition: none; animation: none; opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Starfield -->
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <main>
+      <h1 class="title">Rise of AI</h1>
+      <h2 class="subtitle">The Age of Mass Intelligence</h2>
+      <div class="divider" role="presentation"></div>
+
+      <div class="desc" id="desc">
+        <p>Rise of AI: The Age of Mass Intelligence is a journey through the past, present, and future of intelligence. Blending science, philosophy, and imagination, it asks how humanity’s oldest sparks — fire, language, story — connect to today’s networks, learning machines, and beyond.</p>
+
+        <p>At its heart is a reflection: intelligence is not just something we build, but something we share. Each chapter explores how our tools reshape us, how our connections form new constellations of thought, and how we might carry this lantern forward with care.</p>
+
+        <p>More than a history, this is a meditation on responsibility and possibility — a book about resonance, stewardship, and the ongoing question the universe still asks through us: what am I?</p>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    © 2025 Jeff Arreygue-Deroche. All rights reserved.
+    &nbsp;&middot;&nbsp;
+    <a href="https://instagram.com/evolution.of.intelligence" target="_blank" rel="noopener">Instagram: @evolution.of.intelligence</a>
+  </footer>
+
+  <script>
+    // ---- Starfield ----
+    (function(){
+      const canvas = document.getElementById('stars');
+      const ctx = canvas.getContext('2d', { alpha: true });
+      let W=0,H=0, stars=[], n=120;
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+      function resize(){
+        W = canvas.width = Math.floor(innerWidth * DPR);
+        H = canvas.height = Math.floor(innerHeight * DPR);
+        canvas.style.width = innerWidth + 'px';
+        canvas.style.height = innerHeight + 'px';
+        spawn();
+        drawStatic();
+      }
+      function spawn(){
+        stars = [];
+        for(let i=0;i<n;i++){
+          stars.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: (Math.random()*1.6 + 0.3) * DPR,
+            a: Math.random()*Math.PI*2,
+            s: (Math.random()*0.15 + 0.02) * DPR,
+            tw: Math.random()*0.5 + 0.5
+          });
+        }
+      }
+      function drawStatic(){
+        ctx.clearRect(0,0,W,H);
+        for(const st of stars){
+          const tw = 0.35 + st.tw*0.35;
+          ctx.globalAlpha = tw;
+          ctx.beginPath();
+          ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      let last=0, anim=true;
+      function tick(ts){
+        if (!anim) return;
+        const dt = Math.min(32, ts-last || 16); last=ts;
+        ctx.clearRect(0,0,W,H);
+        for(const st of stars){
+          st.y += st.s * dt * 0.03;
+          if(st.y > H+10) st.y = -10, st.x = Math.random()*W;
+          st.a += 0.02;
+          const tw = (Math.sin(st.a)*0.5+0.5)*st.tw + 0.1;
+          ctx.globalAlpha = tw;
+          ctx.beginPath();
+          ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(tick);
+      }
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      addEventListener('resize', resize);
+      resize();
+      if (!reduce){
+        anim = true;
+        requestAnimationFrame(tick);
+      } else {
+        anim = false; // static stars remain visible
+      }
+    })();
+
+    // ---- Paragraph scroll reveal ----
+    (function(){
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const paras = Array.from(document.querySelectorAll('#desc p'));
+      if (reduce || !('IntersectionObserver' in window)){
+        paras.forEach(p => p.classList.add('revealed'));
+        return;
+      }
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){ e.target.classList.add('revealed'); io.unobserve(e.target); }
+        });
+      }, {root:null, rootMargin:'0px 0px -10% 0px', threshold:0.05});
+      paras.forEach(p => io.observe(p));
+    })();
+  </script>
+</body>
+</html>
+
+
